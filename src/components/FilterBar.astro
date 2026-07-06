@@ -1,0 +1,86 @@
+---
+export interface Props {
+  years: number[];
+  tags: string[];
+}
+const { years, tags } = Astro.props;
+---
+
+<div class="border-b border-ink-900/10 pb-8 mb-4 space-y-6" data-testid="filter-bar">
+  <div>
+    <div class="mono text-[10px] tracking-widest text-ink-500 mb-3">// TEMPORAL_SEQUENCE</div>
+    <div class="flex flex-wrap gap-2" data-filter-group="year">
+      <button
+        type="button"
+        class="filter-pill mono text-[11px] tracking-widest uppercase px-3 py-1.5 border border-ink-900/20 rounded-full text-ink-700 hover:border-ink-900"
+        data-filter-value="all"
+        data-active="true"
+        data-testid="filter-year-all"
+      >All Years</button>
+      {years.map((y) => (
+        <button
+          type="button"
+          class="filter-pill mono text-[11px] tracking-widest uppercase px-3 py-1.5 border border-ink-900/20 rounded-full text-ink-700 hover:border-ink-900"
+          data-filter-value={String(y)}
+          data-testid={`filter-year-${y}`}
+        >{y}</button>
+      ))}
+    </div>
+  </div>
+
+  <div>
+    <div class="mono text-[10px] tracking-widest text-ink-500 mb-3">// SYSTEM_TAGS</div>
+    <div class="flex flex-wrap gap-2" data-filter-group="tag">
+      <button
+        type="button"
+        class="filter-pill mono text-[11px] tracking-widest uppercase px-3 py-1.5 border border-ink-900/20 rounded-full text-ink-700 hover:border-ink-900"
+        data-filter-value="all"
+        data-active="true"
+        data-testid="filter-tag-all"
+      >All Systems</button>
+      {tags.map((t) => (
+        <button
+          type="button"
+          class="filter-pill mono text-[11px] tracking-widest uppercase px-3 py-1.5 border border-ink-900/20 rounded-full text-ink-700 hover:border-ink-900"
+          data-filter-value={t}
+          data-testid={`filter-tag-${t}`}
+        >{t}</button>
+      ))}
+    </div>
+  </div>
+</div>
+
+<script>
+  const state = { year: 'all', tag: 'all' };
+
+  function applyFilters() {
+    const cards = document.querySelectorAll<HTMLElement>('[data-post]');
+    cards.forEach((card) => {
+      const postYear = card.dataset.year ?? '';
+      const postTags = (card.dataset.tags ?? '').split(',');
+      const yearMatch = state.year === 'all' || postYear === state.year;
+      const tagMatch = state.tag === 'all' || postTags.includes(state.tag);
+      card.style.display = yearMatch && tagMatch ? '' : 'none';
+    });
+
+    const empty = document.querySelector<HTMLElement>('[data-testid="empty-state"]');
+    if (empty) {
+      const visible = Array.from(cards).some((c) => c.style.display !== 'none');
+      empty.style.display = visible ? 'none' : 'block';
+    }
+  }
+
+  document.querySelectorAll<HTMLElement>('[data-filter-group]').forEach((group) => {
+    const groupType = group.dataset.filterGroup as 'year' | 'tag';
+    group.querySelectorAll<HTMLButtonElement>('button[data-filter-value]').forEach((btn) => {
+      btn.addEventListener('click', () => {
+        group.querySelectorAll<HTMLButtonElement>('button[data-filter-value]').forEach((b) => {
+          b.dataset.active = 'false';
+        });
+        btn.dataset.active = 'true';
+        state[groupType] = btn.dataset.filterValue ?? 'all';
+        applyFilters();
+      });
+    });
+  });
+</script>

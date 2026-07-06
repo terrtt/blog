@@ -1,0 +1,35 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { SITE } from '../consts';
+---
+
+<BaseLayout title="About" description={`About ${SITE.author.name} — the person behind the operational logs.`}>
+  <section class="max-w-2xl mx-auto px-6 pt-20 pb-24" data-testid="about-page">
+    <div class="mono text-[11px] tracking-widest text-terracotta-500 mb-4">// IDENTITY</div>
+    <h1
+      class="font-serif text-4xl sm:text-5xl font-semibold text-ink-900 leading-[1.05] tracking-tight mb-8"
+      style="font-variation-settings: 'opsz' 144, 'SOFT' 30, 'WONK' 1;"
+    >
+      About
+    </h1>
+    <div class="prose-post">
+      <p>
+        I'm {SITE.author.name} — an engineer writing about the systems, tools, and
+        philosophies that shape how we build software. This blog is my operational
+        log: unfiltered, long-running, and updated whenever a signal is worth
+        capturing.
+      </p>
+      <p>
+        Expect essays on infrastructure, distributed systems, developer
+        experience, and the occasional manifesto on ownership and craft.
+      </p>
+      <h2>Contact</h2>
+      <p>
+        Reach me at <a href={`mailto:${SITE.author.email}`}>{SITE.author.email}</a>{' '}
+        or on Linkedin <a href={` https://www.linkedin.com/in/devansh-bharadwaj-6435152b9/`}>{SITE.author.twitter}</a>.
+      </p>
+       
+       
+    </div>
+  </section>
+</BaseLayout>

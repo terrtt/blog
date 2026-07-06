@@ -1,0 +1,16 @@
+---
+import { SITE } from '../consts';
+const year = new Date().getFullYear();
+---
+
+<footer class="border-t border-ink-900/10 mt-24" data-testid="site-footer">
+  <div class="max-w-3xl mx-auto px-6 py-10 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+    <div class="mono text-xs text-ink-500 tracking-widest">
+      © {year} {SITE.author.name.toUpperCase()} · ALL LOGS SIGNED
+    </div>
+    <div class="flex items-center gap-5">
+       <a href="/sitemap-index.xml" class="mono text-xs text-ink-600 hover:text-terracotta-500 transition-colors tracking-widest uppercase" data-testid="footer-sitemap">Sitemap</a>
+      <a href={`mailto:${SITE.author.email}`} class="mono text-xs text-ink-600 hover:text-terracotta-500 transition-colors tracking-widest uppercase" data-testid="footer-email">Mail</a>
+    </div>
+  </div>
+</footer>

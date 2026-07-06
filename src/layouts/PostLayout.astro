@@ -1,0 +1,73 @@
+---
+import BaseLayout from './BaseLayout.astro';
+import type { CollectionEntry } from 'astro:content';
+import readingTime from 'reading-time';
+
+export interface Props {
+  post: CollectionEntry<'posts'>;
+  rawBody: string;
+}
+const { post, rawBody } = Astro.props;
+const { title, description, pubDate, updatedDate, tags, type, author } = post.data;
+const readStats = readingTime(rawBody);
+
+const dateStr = pubDate.toLocaleDateString('en-US', {
+  month: 'short', day: '2-digit', year: 'numeric',
+}).toUpperCase().replace(',', '');
+---
+
+<BaseLayout
+  title={title}
+  description={description}
+  article={true}
+  pubDate={pubDate}
+  updatedDate={updatedDate}
+  tags={tags}
+  author={author}
+>
+  <article class="max-w-2xl mx-auto px-6 pt-16 pb-8" data-testid="post-article">
+    <a href="/" class="mono text-[11px] tracking-widest uppercase text-ink-500 hover:text-terracotta-500 transition-colors inline-flex items-center gap-1 mb-10" data-testid="back-link">
+      ← Return to logs
+    </a>
+
+    <header class="mb-12 fade-in">
+      <div class="flex flex-wrap items-baseline gap-3 mb-5 mono text-[11px] tracking-widest">
+        <span class="text-ink-500">{dateStr}</span>
+        <span class="text-terracotta-500 font-medium">{type}</span>
+        <span class="text-ink-400">·</span>
+        <span class="text-ink-500">{Math.ceil(readStats.minutes)} MIN READ</span>
+      </div>
+      <h1
+        class="font-serif text-4xl sm:text-5xl lg:text-6xl font-semibold text-ink-900 leading-[1.05] tracking-tight mb-6"
+        style="font-variation-settings: 'opsz' 144, 'SOFT' 30, 'WONK' 1;"
+        data-testid="post-title"
+      >
+        {title}
+      </h1>
+      <p class="text-lg text-ink-600 leading-relaxed" style="font-variation-settings: 'opsz' 14;">
+        {description}
+      </p>
+    </header>
+
+    <div class="prose-post fade-in" style="animation-delay: 120ms;" data-testid="post-body">
+      <slot />
+    </div>
+
+    <hr class="my-14 border-none border-t border-dashed border-ink-500/40" />
+
+    <footer class="fade-in">
+      <div class="mono text-[10px] tracking-widest text-ink-500 mb-3">// SYSTEM_TAGS</div>
+      <div class="flex flex-wrap gap-2 mb-10">
+        {tags.map((tag) => (
+          <a
+            href={`/tags/${tag.toLowerCase()}/`}
+            class="mono text-[11px] tracking-widest uppercase px-3 py-1.5 border border-ink-900/20 rounded-full text-ink-700 hover:border-terracotta-500 hover:text-terracotta-500 transition-colors"
+          >#{tag}</a>
+        ))}
+      </div>
+      <div class="mono text-[11px] tracking-widest uppercase text-ink-500">
+        Signed — {author}
+      </div>
+    </footer>
+  </article>
+</BaseLayout>

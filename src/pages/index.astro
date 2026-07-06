@@ -1,0 +1,61 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import PostCard from '../components/PostCard.astro';
+import FilterBar from '../components/FilterBar.astro';
+import { SITE } from '../consts';
+
+const allPosts = (await getCollection('posts', ({ data }) => !data.draft)).sort(
+  (a, b) => b.data.pubDate.getTime() - a.data.pubDate.getTime()
+);
+
+const years = Array.from(
+  new Set(allPosts.map((p) => p.data.pubDate.getFullYear()))
+).sort((a, b) => b - a);
+
+const tags = Array.from(new Set(allPosts.flatMap((p) => p.data.tags))).sort();
+---
+
+<BaseLayout>
+  <section class="max-w-3xl mx-auto px-6 pt-20 pb-10" data-testid="hero">
+    <div class="mono text-[11px] tracking-widest text-terracotta-500 mb-4">// Hi, I am devansh </div>
+    <h1
+      class="font-serif text-2xl sm:text-3xl lg:text-4xl font-semibold text-ink-900 leading-[1.05] tracking-tight mb-6"
+      style="font-variation-settings: 'opsz' 144, 'SOFT' 30, 'WONK' 1;"
+    >
+      Welcome to System Reliability and Production Fuckups by {SITE.author.name}.
+    </h1>
+     
+  </section>
+
+  <section class="max-w-3xl mx-auto px-6 pb-24">
+    <FilterBar years={years} tags={tags} />
+
+    <div data-testid="posts-list">
+      {allPosts.map((post, i) => (
+        <div
+          data-post
+          data-year={String(post.data.pubDate.getFullYear())}
+          data-tags={post.data.tags.join(',')}
+        >
+          <PostCard
+            href={`/blog/${post.slug}/`}
+            title={post.data.title}
+            description={post.data.description}
+            pubDate={post.data.pubDate}
+            type={post.data.type}
+            tags={post.data.tags}
+            index={i}
+          />
+        </div>
+      ))}
+    </div>
+
+    <div
+      class="mono text-sm text-ink-500 py-16 text-center hidden"
+      data-testid="empty-state"
+    >
+      // NO LOGS MATCH THE CURRENT FILTER
+    </div>
+  </section>
+</BaseLayout>

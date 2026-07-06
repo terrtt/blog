@@ -1,0 +1,48 @@
+---
+export interface Props {
+  href: string;
+  title: string;
+  description: string;
+  pubDate: Date;
+  type: string;
+  tags: string[];
+  index?: number;
+}
+
+const { href, title, description, pubDate, type, tags, index = 0 } = Astro.props;
+
+const dateStr = pubDate.toLocaleDateString('en-US', {
+  month: 'short',
+  day: '2-digit',
+  year: 'numeric',
+}).toUpperCase().replace(',', '');
+---
+
+<a
+  href={href}
+  class="post-card fade-in block border-t border-ink-900/15 py-8 group"
+  style={`animation-delay: ${index * 60}ms`}
+  data-testid={`post-card-${index}`}
+>
+  <div class="flex items-baseline gap-4 mb-3">
+    <span class="mono text-[11px] tracking-widest text-ink-500" data-testid="post-date">
+      {dateStr}
+    </span>
+    <span class="mono text-[11px] tracking-widest text-terracotta-500 font-medium" data-testid="post-type">
+      {type}
+    </span>
+  </div>
+  <h2 class="post-title font-serif text-2xl sm:text-3xl font-semibold text-ink-900 tracking-tight leading-tight mb-3" style="font-variation-settings: 'opsz' 80, 'SOFT' 20;">
+    {title}
+  </h2>
+  <p class="text-ink-700 leading-relaxed mb-4 max-w-2xl" style="font-variation-settings: 'opsz' 14;">
+    {description}
+  </p>
+  <div class="flex flex-wrap gap-3">
+    {tags.map((tag) => (
+      <span class="mono text-[10px] tracking-wider text-ink-500 uppercase">
+        #{tag}
+      </span>
+    ))}
+  </div>
+</a>

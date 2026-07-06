@@ -1,0 +1,37 @@
+---
+import { SITE, NAV_LINKS } from '../consts';
+const pathname = Astro.url.pathname;
+---
+
+<header class="border-b border-ink-900/10 bg-cream-100/80 backdrop-blur-sm sticky top-0 z-20" data-testid="site-header">
+  <div class="max-w-3xl mx-auto px-6 py-5 flex items-center justify-between">
+    <a
+      href="/"
+      class="group flex items-center gap-2"
+      data-testid="site-logo"
+      aria-label={SITE.name}
+    >
+      <span class="mono text-xs text-terracotta-500 tracking-widest">▍</span>
+      <span class="font-serif text-lg font-semibold text-ink-900 tracking-tight group-hover:text-terracotta-500 transition-colors">
+        {SITE.name}
+      </span>
+       
+    </a>
+    <nav class="flex items-center gap-6" data-testid="site-nav">
+      {NAV_LINKS.map((link) => {
+        const isActive = pathname === link.href || (link.href !== '/' && pathname.startsWith(link.href));
+        return (
+          <a
+            href={link.href}
+            data-testid={`nav-${link.label.toLowerCase()}`}
+            class={`mono text-xs tracking-widest uppercase transition-colors ${
+              isActive ? 'text-terracotta-500' : 'text-ink-600 hover:text-ink-900'
+            }`}
+          >
+            {link.label}
+          </a>
+        );
+      })}
+    </nav>
+  </div>
+</header>

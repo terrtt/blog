@@ -1,0 +1,32 @@
+---
+import SEO from '../components/SEO.astro';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import '../styles/global.css';
+
+export interface Props {
+  title?: string;
+  description?: string;
+  image?: string;
+  article?: boolean;
+  pubDate?: Date;
+  updatedDate?: Date;
+  tags?: string[];
+  author?: string;
+}
+const props = Astro.props;
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <SEO {...props} />
+  </head>
+  <body class="grain relative">
+    <Header />
+    <main class="relative z-10" data-testid="main-content">
+      <slot />
+    </main>
+    <Footer />
+  </body>
+</html>
